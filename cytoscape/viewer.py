@@ -43,3 +43,8 @@ def render(network, style, layout_algorithm=DEF_LAYOUT, height=DEF_HEIGHT, width
         layout=layout_algorithm, style_json=json.dumps(style))
 
     return display(HTML(cyjs_widget))
+
+def embedShare(url, width=DEF_WIDTH, height=DEF_HEIGHT):
+    from IPython.core.display import display
+    from IPython.lib.display import IFrame
+    return display(IFrame(url, width, height))
