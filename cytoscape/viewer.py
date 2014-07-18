@@ -20,13 +20,23 @@ DEF_EDGES = [
 
 DEF_LAYOUT = 'preset'
 
+PRESET_LAYOUTS = {
+    'Preset': 'preset',
+    'Circle':'circle',
+    'Concentric':'concentric',
+    'Breadthfirst':'breadthfirst',
+    'Spring':'cose',
+    'Grid':'grid'
+}
+
+DEF_SCALING = 1.0
+
 HTML_TEMPLATE_FILE = 'template.html'
 
 
 def render(network, style, layout_algorithm=DEF_LAYOUT, height=DEF_HEIGHT, width=DEF_WIDTH):
     from jinja2 import Template
     from IPython.core.display import display, HTML
-
 
     if network==None:
         nodes = DEF_NODES
@@ -35,7 +45,6 @@ def render(network, style, layout_algorithm=DEF_LAYOUT, height=DEF_HEIGHT, width
         nodes = network['elements']['nodes']
         edges = network['elements']['edges']
 
-
     path = os.path.abspath(os.path.dirname(__file__)) + '/' + HTML_TEMPLATE_FILE
     template = Template(open(path).read())
     cyjs_widget = template.render(nodes = json.dumps(nodes), edges = json.dumps(edges), 
@@ -43,6 +52,84 @@ def render(network, style, layout_algorithm=DEF_LAYOUT, height=DEF_HEIGHT, width
         layout=layout_algorithm, style_json=json.dumps(style))
 
     return display(HTML(cyjs_widget))
+
+
+def get_layouts():
+    return PRESET_LAYOUTS
+
+
+def from_networkx(networkx_graph):
+    new_graph = {}
+    elements = {}
+    nodes = []
+    edges = []
+
+    nodes_x = networkx_graph.nodes();
+    edges_x = networkx_graph.edges();
+
+    for node in nodes_x:
+        new_node = {}
+        data = {}
+        data['id'] = str(node)
+        data['name'] = str(node)
+        new_node['data'] = data
+        nodes.append(new_node)
+
+    for edge in edges_x:
+        new_edge = {}
+        data = {}
+        data['source'] = str(edge[0])
+        data['target'] = str(edge[1])
+        new_edge['data'] = data
+        edges.append(new_edge)
+
+    elements['nodes'] = nodes
+    elements['edges'] = edges
+    new_graph['elements'] = elements
+
+    return new_graph
+
+
+def from_igraph(igraph_network, layout, scale=DEF_SCALING):
+    new_graph = {}
+    elements = {}
+    nodes = []
+    edges = []
+
+    el = igraph_network.get_edgelist()
+    nodes_original = igraph_network.vs;
+
+    idx = 0
+    for node in nodes_original:
+        new_node = {}
+        data = {}
+        data['id'] = str(node.index)
+        data['name'] = str(node.index)
+        new_node['data'] = data
+        if layout is not None:
+            position = {}
+            position['x'] = layout[idx][0] * scale
+            position['y'] = layout[idx][1] * scale
+            new_node['position'] = position
+
+        nodes.append(new_node)
+        idx = idx + 1
+
+    for edge in el:
+        new_edge = {}
+        data = {}
+        data['source'] = str(edge[0])
+        data['target'] = str(edge[1])
+        new_edge['data'] = data
+        edges.append(new_edge)
+
+    elements['nodes'] = nodes
+    elements['edges'] = edges
+    new_graph['elements'] = elements
+
+    return new_graph
+
+
 
 def embedShare(url, width=DEF_WIDTH, height=DEF_HEIGHT):
     from IPython.core.display import display

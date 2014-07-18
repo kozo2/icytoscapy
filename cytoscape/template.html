@@ -20,37 +20,22 @@
 
     <script>
     (function() {
+        $('#{{uuid}}').cytoscape({
+            elements: {
+                nodes: {{nodes}},
+                edges: {{edges}}
+            },
 
-        function render() {
-            $('#{{uuid}}').cytoscape({
-                elements: {
-                    nodes: {{nodes}},
-                    edges: {{edges}}
-                },
+            layout: {
+                name: '{{layout}}'
+            },
 
-                layout: {
-                    name: '{{layout}}'
-                },
-
-                ready: function() {
-                    window.cy = this;
-                    cy.fit();
-                    cy.style().fromJson({{style_json}}).update();
-                }
-            });
-        };
-
-        var before_render = function() {
-            if (window['cytoscape'] === undefined) {
-                window.addEventListener("load_cytoscape", before_render);
-            } else {
-                console.log("Ready for rendering!");
-                render();
+            ready: function() {
+                window.cy = this;
+                cy.fit();
+                cy.style().fromJson({{style_json}}).update();
             }
-        }
-
-        before_render();
-
+        });
     })();
     </script>
 </head>

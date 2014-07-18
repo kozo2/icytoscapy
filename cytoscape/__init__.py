@@ -1,6 +1,6 @@
 import os
 
-JS_LOADER_FILE ="load_cyjs.js"
+JS_LOADER_FILE ="loader.js"
 
 # Initialize
 def init():
