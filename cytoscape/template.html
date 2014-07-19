@@ -20,6 +20,7 @@
 
     <script>
     (function() {
+      function render() {
         $('#{{uuid}}').cytoscape({
             elements: {
                 nodes: {{nodes}},
@@ -36,6 +37,20 @@
                 cy.style().fromJson({{style_json}}).update();
             }
         });
+      }
+
+      var before_render = function(){
+        if(window['cytoscape'] === undefined){
+          console.log("wait!");
+          window.addEventListener("load_cytoscape", before_render);
+        } else {
+          console.log("Ready to render graph...");
+          render();
+        }
+      }
+
+      before_render();
+
     })();
     </script>
 </head>

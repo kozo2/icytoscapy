@@ -72,6 +72,8 @@ def from_networkx(networkx_graph):
         data = {}
         data['id'] = str(node)
         data['name'] = str(node)
+        for key in networkx_graph.node[node].keys():
+            data[key] = networkx_graph.node[node][key]
         new_node['data'] = data
         nodes.append(new_node)
 
@@ -99,12 +101,16 @@ def from_igraph(igraph_network, layout, scale=DEF_SCALING):
     el = igraph_network.get_edgelist()
     nodes_original = igraph_network.vs;
 
+    node_attr = igraph_network.vs.attributes()
+
     idx = 0
     for node in nodes_original:
         new_node = {}
         data = {}
         data['id'] = str(node.index)
         data['name'] = str(node.index)
+        for key in node_attr:
+            data[key] = node[key]
         new_node['data'] = data
         if layout is not None:
             position = {}
