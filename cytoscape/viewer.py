@@ -19,6 +19,7 @@ DEF_EDGES = [
 ]
 
 DEF_LAYOUT = 'preset'
+DEF_STYLE = 'default'
 
 PRESET_LAYOUTS = {
     'Preset': 'preset',
@@ -34,7 +35,7 @@ DEF_SCALING = 1.0
 HTML_TEMPLATE_FILE = 'template.html'
 
 
-def render(network, style, layout_algorithm=DEF_LAYOUT, height=DEF_HEIGHT, width=DEF_WIDTH):
+def render(network, style=DEF_STYLE, layout_algorithm=DEF_LAYOUT, height=DEF_HEIGHT, width=DEF_WIDTH):
     from jinja2 import Template
     from IPython.core.display import display, HTML
 
@@ -68,6 +69,14 @@ def from_networkx(networkx_graph):
     nodes_x = networkx_graph.nodes();
     edges_x = networkx_graph.edges();
 
+    # Network Attributes
+    net_attr_keys = networkx_graph.graph.keys();
+    network_data = {}
+    for net_key in net_attr_keys:
+        network_data[net_key] = networkx_graph.graph[net_key]
+    
+    new_graph['data'] = network_data
+
     for node in nodes_x:
         new_node = {}
         data = {}
@@ -83,6 +92,7 @@ def from_networkx(networkx_graph):
         data = {}
         data['source'] = str(edge[0])
         data['target'] = str(edge[1])
+        
         new_edge['data'] = data
         edges.append(new_edge)
 
