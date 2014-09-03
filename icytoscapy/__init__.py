@@ -6,7 +6,7 @@ JS_LOADER_FILE ="loader.js"
 def init():
     from IPython.core.display import display, Javascript
 
-    path = os.path.abspath(os.path.dirname(__file__)) + "/" + JS_LOADER_FILE
+    path = os.path.abspath(os.path.dirname(__file__)) + "/js/" + JS_LOADER_FILE
     js_loader = open(path).read()
     return display(Javascript(js_loader))
 
