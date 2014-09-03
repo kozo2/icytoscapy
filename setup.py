@@ -8,5 +8,5 @@ setup(name='icytoscapy',
       author='Naoki Nishida, Keiichiro Ono, Kozo Nishida',
       author_email='knishida@riken.jp',
       url='https://github.com/kozo2/cytoscape-ipy',
-      packages=['icytoscapy'],
+      packages=['icytoscapy', 'icytoscapy.js', 'icytoscapy.data'],
      )
